@@ -7,29 +7,21 @@ width = 1525
 height = 860
 
 def gameloop(field):
-    listener.unlock()
     field.reset()
     while True:
         root.update()
-        if listener.is_active("exit"):
+        if listener.locking_check("exit"):
             exit(0)
-        elif listener.is_active("left"):
-            listener.lock()
+        elif listener.locking_check("left"):
             field.move(LEFT)
-        elif listener.is_active("up"):
-            listener.lock()
+        elif listener.locking_check("up"):
             field.move(UP)
-        elif listener.is_active("right"):
-            listener.lock()
+        elif listener.locking_check("right"):
             field.move(RIGHT)
-        elif listener.is_active("down"):
-            listener.lock()
+        elif listener.locking_check("down"):
             field.move(DOWN)
-        elif listener.is_active("restart"):
-            listener.lock()
+        elif listener.locking_check("restart"):
             field.reset()
-        elif not listener.is_any_active(ignore_lock=True):
-            listener.unlock()
 
 if __name__ == "__main__":
 
