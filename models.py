@@ -7,11 +7,11 @@ from matplotlib.colors import rgb2hex
 from enum import Enum
 
 class Direction(Enum):
-    UNSET = "unset"
-    LEFT = "left"
-    UP = "up"
-    RIGHT = "right"
-    DOWN = "down"
+    UNSET = -1
+    LEFT = 0
+    UP = 1
+    RIGHT = 2
+    DOWN = 3
 
 class Cell:
 
