@@ -6,6 +6,18 @@ from matplotlib.cm import get_cmap
 from matplotlib.colors import rgb2hex
 from enum import Enum
 
+class Action(Enum):
+    UP = "up"
+    DOWN = "down"
+    LEFT = "left"
+    RIGHT = "right"
+    RESET = "reset"
+    SAVE = "save"
+    LOAD = "load"
+    START_AI = "start_ai"
+    STOP_AI = "stop_ai"
+    QUIT = "quit"
+
 class Direction(Enum):
     UNSET = -1
     LEFT = 0

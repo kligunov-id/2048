@@ -1,78 +1,90 @@
 from tkinter import Tk, Button
-from models import Cell, VisibleField, Direction
+from models import VisibleField, Direction, Action
 from bot import model
 
-width = 1525
-height = 860
+class App:
+    width = 1525
+    height = 860
 
-def bind_keyboard(widget):
     activations = {
         "up": ("w", "Up"),
         "down": ("s", "Down"),
         "left": ("a", "Left"),
         "right": ("d", "Right"),
-        "exit": ("e", "q", "Escape"),
-        "restart": ("r", ),
+        "quit": ("e", "q", "Escape"),
+        "reset": ("r", ),
     }
-    actions = {
-        "up": lambda: field.move(Direction.UP),
-        "down": lambda: field.move(Direction.DOWN),
-        "left": lambda: field.move(Direction.LEFT),
-        "right": lambda: field.move(Direction.RIGHT),
-        "exit": lambda: exit(0),
-        "restart": lambda: field.reset(),  
-    }
-    def on_press(event):
-        for alias, activators in activations.items():
-            if event.keysym in activators:
-                actions[alias]()
-    widget.bind("<KeyPress>", on_press)
 
-ai_running = False
+    def __init__(self):
+        self.root = Tk()
+        self.root.attributes('-fullscreen', True)
 
-def step_ai():
-    move = Direction(model.act(field.grid))
-    field.move(move)
-    if ai_running:
-        root.after(200, step_ai)
+        self.field = VisibleField(self.root)
+        self.field.reset()
+        
+        self.actions = {
+            Action.UP: lambda: self.field.move(Direction.UP),
+            Action.DOWN: lambda: self.field.move(Direction.DOWN),
+            Action.LEFT: lambda: self.field.move(Direction.LEFT),
+            Action.RIGHT: lambda: self.field.move(Direction.RIGHT),
+            Action.RESET: lambda: self.field.reset(),
+            Action.SAVE: lambda: self.field.save(), 
+            Action.LOAD: lambda: self.field.load(),
+            Action.START_AI: lambda: self.start_bot(), 
+            Action.STOP_AI: lambda: self.stop_bot(),   
+            Action.QUIT: lambda: exit(0),
+        }
+        self.bind_keyboard()
 
-def start_ai():
-    global ai_running
-    if ai_running:
-        return
-    ai_running = True
-    step_ai()
+        self.buttons = {}
+        self.init_buttons()
 
-def stop_ai():
-    global ai_running
-    ai_running = False
+        self.bot_running = False
+
+    def init_buttons(self):
+        style = dict(width=18, height=2, font=("Noto Sans Mono", 20))
+        self.buttons["reset"] = Button(self.root, text="Restart", command=self.actions[Action.RESET], **style)
+        self.buttons["reset"].place(x=1200, y=60)
+        self.buttons["save"] = Button(self.root, text="Save", command=self.actions[Action.SAVE], **style)
+        self.buttons["save"].place(x=1200, y=150)
+        self.buttons["load"] = Button(self.root, text="Load", command=self.actions[Action.LOAD], **style)
+        self.buttons["load"].place(x=1200, y=240)
+        self.buttons["start_ai"] = Button(self.root, text="Start AI", command=self.actions[Action.START_AI], **style)
+        self.buttons["start_ai"].place(x=1200, y=350)
+        self.buttons["stop_bot"] = Button(self.root, text="Stop AI", command=self.actions[Action.STOP_AI], **style)
+        self.buttons["stop_bot"].place(x=1200, y=440)
+        self.buttons["quit"] = Button(self.root, text="Quit", command=self.actions[Action.QUIT], **style)
+        self.buttons["quit"].place(x=1200, y=550)
+
+    def bind_keyboard(self):
+        def on_press(event):
+            for alias, activators in self.activations.items():
+                if event.keysym in activators:
+                    self.actions[Action(alias)]()
+        self.root.bind("<KeyPress>", on_press)
+    
+    def start_bot(self):
+        if self.bot_running:
+             return
+        self.bot_running = True
+        self.step_bot()
+
+    def stop_bot(self):
+        self.bot_running = False
+
+    def step_bot(self):
+        if not self.bot_running:
+            return
+        move = Direction(model.act(self.field.grid))
+        self.field.move(move)
+        self.root.after(200, self.step_bot)
+
+    def mainloop(self):
+        self.root.mainloop()
+
+def main():
+    app = App()
+    app.mainloop()
 
 if __name__ == "__main__":
-
-    root = Tk()
-    root.attributes('-fullscreen', True)
-
-    field = VisibleField(root)
-    field.reset()
-    
-    start_button = Button(root, text="Restart", command=field.reset, width = 18, height=2, font=("Noto Sans Mono", 20))
-    start_button.place(x=1200, y=60)
-
-    save_button = Button(root, text="Save", command=field.save, width = 18, height=2, font=("Noto Sans Mono", 20))
-    save_button.place(x=1200, y=150)
-
-    load_button = Button(root, text="Load", command=field.load, width = 18, height=2, font=("Noto Sans Mono",  20))
-    load_button.place(x=1200, y=240)
-    
-    start_ai_button = Button(root, text="Start AI", command=start_ai, width = 18, height=2, font=("Noto Sans Mono",  20))
-    start_ai_button.place(x=1200, y=350)
-    
-    stop_ai_button = Button(root, text="Stop AI", command=stop_ai, width = 18, height=2, font=("Noto Sans Mono",  20))
-    stop_ai_button.place(x=1200, y=440)
-
-    quit_button = Button(root, text="Quit", command=lambda: exit(0), width = 18, height=2, font=("Noto Sans Mono",  20))
-    quit_button.place(x=1200, y=560)
-
-    bind_keyboard(root)
-
-    root.mainloop()
+    main()
