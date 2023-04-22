@@ -4,12 +4,14 @@ from tkinter.font import Font
 from math import log2
 from matplotlib.cm import get_cmap
 from matplotlib.colors import rgb2hex
+from enum import Enum
 
-LEFT = 0
-UP = 1
-RIGHT = 2
-DOWN = 3
-UNSET = -1
+class Direction(Enum):
+    UNSET = "unset"
+    LEFT = "left"
+    UP = "up"
+    RIGHT = "right"
+    DOWN = "down"
 
 class Cell:
 
@@ -43,16 +45,16 @@ class Field:
     def __init__(self):
         self.grid = [[0 for j in range(4)] for i in range(4)]
         self.score = 0
-        self.direction = UNSET
+        self.direction = Direction.UNSET
     
     def rotate_index(self, i, j):
-        if self.direction == LEFT:
+        if self.direction == Direction.LEFT:
             return i, j
-        elif self.direction == RIGHT:
+        elif self.direction == Direction.RIGHT:
             return i, 3 - j
-        elif self.direction == UP:
+        elif self.direction == Direction.UP:
             return j, i
-        elif self.direction == DOWN:
+        elif self.direction == Direction.DOWN:
             return 3 - j, i
     
     def get(self, i, j):
@@ -88,7 +90,7 @@ class Field:
             self.move_row(i)
             self.merge(i)
             self.move_row(i)
-        self.direction = UNSET
+        self.direction = Direction.UNSET
         if old_grid != self.grid:
             self.spawn_new()
 
