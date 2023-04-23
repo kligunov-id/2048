@@ -1,0 +1,15 @@
+defaults:
+  - _self_
+  - buttons
+
+# Keyboard binding in the format
+# {action_name}: [ {keysym_1}, {keysym_2}, ... ]
+controls:
+  up: [ Up, w ]
+  down: [ Down, s ]
+  left: [ Left, a ]
+  right: [ Right, d ]
+  quit: [ q, e, Escape ]
+  reset: [ r ]
+
+bot_timeout_ms: 200

@@ -1,0 +1,40 @@
+buttons:
+  - 
+    name: Restart
+    action: reset
+    x: 1200
+    y: 60
+    style: &deafult-style 
+      width: 18
+      height: 2
+      font: [ Noto Sans Mono, 20 ]
+  -
+    name: Save
+    action: save
+    x: 1200
+    y: 150
+    style: *deafult-style
+  - 
+    name: Load
+    action: load
+    x: 1200
+    y: 240
+    style: *deafult-style
+  -
+    name: Start AI
+    action: start_ai
+    x: 1200
+    y: 350
+    style: *deafult-style
+  -
+    name: Stop AI
+    action: stop_ai
+    x: 1200
+    y: 440
+    style: *deafult-style
+  - 
+    name: Quit
+    action: quit
+    x: 1200
+    y: 550
+    style: *deafult-style
