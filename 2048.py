@@ -25,7 +25,7 @@ class App:
             Action.LOAD: lambda: self.field.load(),
             Action.START_AI: lambda: self.start_bot(), 
             Action.STOP_AI: lambda: self.stop_bot(),   
-            Action.QUIT: lambda: exit(0),
+            Action.QUIT: self.root.destroy,
         }
         self.bind_keyboard()
 
