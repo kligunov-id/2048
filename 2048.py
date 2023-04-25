@@ -11,10 +11,10 @@ class App:
         self.root = Tk()
         self.root.attributes('-fullscreen', True)
 
-        self.field = VisibleField(self.root)
+        self.field = VisibleField(self.root, self.config)
         self.field.reset()
         
-        self.activations = self.config.controls
+        self.keyboard_controls = self.config.controls
         self.actions = {
             Action.UP: lambda: self.field.move(Direction.UP),
             Action.DOWN: lambda: self.field.move(Direction.DOWN),
@@ -36,7 +36,8 @@ class App:
 
     def init_buttons(self):
         for button in self.config.buttons:
-            self.buttons[button.name] = Button(self.root,
+            self.buttons[button.name] = Button(
+                self.root,
                 text=button.name,
                 command=self.actions[Action(button.action)],
                 **to_container(button.style))
@@ -44,9 +45,9 @@ class App:
 
     def bind_keyboard(self):
         def on_press(event):
-            for alias, activators in self.activations.items():
-                if event.keysym in activators:
-                    self.actions[Action(alias)]()
+            for action_alias, keysyms in self.keyboard_controls.items():
+                if event.keysym in keysyms:
+                    self.actions[Action(action_alias)]()
         self.root.bind("<KeyPress>", on_press)
     
     def start_bot(self):

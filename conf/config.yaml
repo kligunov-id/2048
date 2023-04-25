@@ -13,3 +13,7 @@ controls:
   reset: [ r ]
 
 bot_timeout_ms: 200
+
+# Changing this parameter invalidates save file
+# so delete it or save new field before loading
+field_size: 4
