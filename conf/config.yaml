@@ -1,6 +1,7 @@
 defaults:
   - _self_
   - buttons
+  - field_layout/field_layout
 
 # Keyboard binding in the format
 # {action_name}: [ {keysym_1}, {keysym_2}, ... ]
@@ -16,4 +17,7 @@ bot_timeout_ms: 200
 
 # Changing this parameter invalidates save file
 # so delete it or save new field before loading
+# Layout might be broken when size is not 4
 field_size: 4
+
+save_path: .save

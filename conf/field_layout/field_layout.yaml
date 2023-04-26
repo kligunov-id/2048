@@ -1,0 +1,16 @@
+width: 1525
+height: 860
+background_color: '#ccaacc'
+cell_margin: 15
+
+cells:
+  colormap:
+    name: autumn
+    divisions: 10
+
+  font:
+    family: Noto Sans Mono
+    size: 32
+
+  background_color: "#ccbacc"
+  side_size: 200

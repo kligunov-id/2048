@@ -5,6 +5,8 @@ from math import log2
 from matplotlib.cm import get_cmap
 from matplotlib.colors import rgb2hex
 from enum import Enum
+from config import to_container
+
 
 class Action(Enum):
     UP = "up"
@@ -27,24 +29,33 @@ class Direction(Enum):
 
 class Cell:
 
-    bgcolor = "#ccbacc"
-    side = 200
-    colormap = get_cmap("autumn", 10)
-
-    @classmethod
-    def color(cls, value):
+    def color(self, value):
         if value == 0:
-            return cls.bgcolor
-        i = int(log2(value)) % 10
+            return self.cell_config.background_color
+        i = int(log2(value)) % self.cell_config.colormap.divisions
         if i == 0:
-            i = 10
-        return rgb2hex(cls.colormap(10 - i))
+            i = self.cell_config.colormap.divisions
+        return rgb2hex(self.colormap(self.cell_config.colormap.divisions - i))
 
-    def __init__(self, canvas, x, y):
+    def __init__(self, canvas, cell_config, x, y):
         self.canvas = canvas
-        self.label = canvas.create_rectangle(x, y, x + self.side, y + self.side, fill=self.bgcolor, outline=self.bgcolor)
-        self.font = Font(size=32, family="Noto Sans Mono")
-        self.text = canvas.create_text(x + self.side//2, y + self.side//2, font=self.font)
+        self.cell_config = cell_config
+        self.colormap = get_cmap(
+            self.cell_config.colormap.name,
+            self.cell_config.colormap.divisions)
+
+        self.label = canvas.create_rectangle(
+            x,
+            y,
+            x + self.cell_config.side_size,
+            y + self.cell_config.side_size,
+            fill=self.cell_config.background_color,
+            outline=self.cell_config.background_color)
+        self.font = Font(**to_container(self.cell_config.font))
+        self.text = canvas.create_text(
+            x + self.cell_config.side_size//2,
+            y + self.cell_config.side_size//2,
+            font=self.font)
 
     def update(self, value):
         self.canvas.itemconfig(self.text, text=('' if value == 0 else str(value)))
@@ -144,13 +155,17 @@ class Field:
                     return False
         return True
 
-    def save(self, filename=".save"):
+    def save(self, filename=None):
+        if filename is None:
+            filename = self.config.save_path
         with open(filename, "w") as save:
             save.write(str(self.score) + '\n')
             for grid_row in self.grid:
                 save.write(' '.join([str(value) for value in grid_row]) + '\n')
 
-    def load(self, filename=".save"):
+    def load(self, filename=None):
+        if filename is None:
+            filename = self.config.save_path
         dump = open(filename, "r").readlines()
         if len(dump) < self.n + 1:
             raise CorruptedSaveFileError(f"Save file too short, should have {self.n + 1} lines")
@@ -166,21 +181,25 @@ class Field:
 
 class VisibleField(Field):
 
-    margin = 15
-    width = 1525
-    height = 860
-
     def __init__(self, root, config):
         super().__init__(config)
+        self.layout_config = config.field_layout
+        self.save_path = config.save_path
 
-        canvas = Canvas(root, width=self.width, height=self.height, bg='#ccaacc')
+        canvas = Canvas(root,
+            width=self.layout_config.width,
+            height=self.layout_config.height,
+            bg=self.layout_config.background_color)
         canvas.pack()
 
-        self.cells = [[Cell(canvas, *self.cell_position(i, j)) for j in range(4)] for i in range(4)]
+        self.cells = [[Cell(canvas,
+                            self.layout_config.cells,
+                            *self.cell_position(i, j))
+                        for j in range(self.n)] for i in range(self.n)]
 
     def cell_position(self, i , j):
-        x = self.margin * (j + 1) + Cell.side * j
-        y = self.margin * (i + 1) + Cell.side * i
+        x = self.layout_config.cell_margin * (j + 1) + self.layout_config.cells.side_size * j
+        y = self.layout_config.cell_margin * (i + 1) + self.layout_config.cells.side_size * i
         return x, y
 
     def set(self, i, j, value):
@@ -199,6 +218,6 @@ class VisibleField(Field):
         super().reset()
         self.update_cells()
 
-    def load(self, filename=".save"):
+    def load(self, filename=None):
         super().load(filename)
         self.update_cells()
