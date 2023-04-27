@@ -1,12 +1,13 @@
-from random import choice
-from tkinter import Canvas
+import random
+import tkinter as tk
 from tkinter.font import Font
+
 from math import log2
+from enum import Enum
+from app.config import to_container
+
 from matplotlib.cm import get_cmap
 from matplotlib.colors import rgb2hex
-from enum import Enum
-from config import to_container
-
 
 class Action(Enum):
     UP = "up"
@@ -141,8 +142,8 @@ class Field:
         empty_cells = self.get_empty_cells()
         if not empty_cells:
             return
-        i, j = choice(empty_cells)
-        self.set(i, j, choice(sample))
+        i, j = random.choice(empty_cells)
+        self.set(i, j, random.choice(sample))
 
     def is_over(self):
         for i in range(self.n):
@@ -186,7 +187,7 @@ class VisibleField(Field):
         self.layout_config = config.field_layout
         self.save_path = config.save_path
 
-        canvas = Canvas(root,
+        canvas = tk.Canvas(root,
             width=self.layout_config.width,
             height=self.layout_config.height,
             bg=self.layout_config.background_color)

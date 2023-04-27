@@ -6,7 +6,7 @@ def to_container(config):
 
 class Config:
 
-    config_path = "conf"
+    config_path = "../conf"
     config_name = "config"
 
     def __init__(self):

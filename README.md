@@ -12,7 +12,7 @@ Simply execute `python 2048.py`.
 ### Controls
 
 Both `WASD` and arrow keys supported. `Esc`,  `E` or `Q` to exit, `R` to restart.
-In case other bindings (even for other actions) are desired, edit them under `conf/config.yaml`. List of all available actions and their aliases is defined by the `Actions` enum of `models.py` module.
+In case other bindings (even for other actions) are desired, edit them under `conf/config.yaml`. List of all available actions and their aliases is defined by the `Actions` enum of `app/models.py` module.
 
 Multi-key bindings are not implemented (not even Ctrl + Key combinations, although Ctrl by itsef is a valid option).
 
@@ -30,7 +30,7 @@ Also layout and appearence definitions (e.g colors and fonts) can be found in th
 
 ### User-programmed bots
 
-If you wish to try out your bot in this environment, replace the content of `bot.py` file with your own. The protocol is simple: your module should define an ___object___ named `model` which should have an implementation of the `model.act(grid)` function. This function should accept a two-dimensional Python list of values for each cell in the grid and return a number between 1 and 4 which corresponds to the move your bot is willing to make. The mapping of numbers to directions is done via the `Direction` enum defined in models.py.
+If you wish to try out your bot in this environment, replace the content of `app/bot.py` file with your own. The protocol is simple: your module should define an ___object___ named `model` which should have an implementation of the `model.act(grid)` function. This function should accept a two-dimensional Python list of values for each cell in the grid and return a number between 1 and 4 which corresponds to the move your bot is willing to make. The mapping of numbers to directions is done via the `Direction` enum defined in `app/models.py`.
 
 ### Future plans
 
