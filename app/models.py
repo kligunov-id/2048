@@ -67,9 +67,11 @@ class CorruptedSaveFileError(Exception):
 
 class Field:
 
-    def __init__(self, config):
-        self.config = config
-        self.n = config.field_size
+    def __init__(self, config=None, n=None):
+        if config:
+            self.n = config.field_size
+        else:
+            self.n = n
         self.grid = [[0 for j in range(self.n)] for i in range(self.n)]
         self.score = 0
         self.direction = Direction.UNSET
@@ -122,6 +124,8 @@ class Field:
         self.direction = Direction.UNSET
         if self.cell_changes_count:
             self.spawn_new()
+        else:
+            self.score -= 10
 
     def reset(self):
         self.grid = [[0 for j in range(self.n)] for i in range(self.n)]
@@ -152,7 +156,7 @@ class Field:
                     return False
                 if i + 1 < self.n and self.grid[i][j] == self.grid[i + 1][j]:
                     return False
-                if j + 1 < self.n and self.grid[i][j] == self.get[i][j + 1]:
+                if j + 1 < self.n and self.grid[i][j] == self.grid[i][j + 1]:
                     return False
         return True
 
@@ -183,7 +187,7 @@ class Field:
 class VisibleField(Field):
 
     def __init__(self, root, config):
-        super().__init__(config)
+        super().__init__(config=config)
         self.layout_config = config.field_layout
         self.save_path = config.save_path
 
