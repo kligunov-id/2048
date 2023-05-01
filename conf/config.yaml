@@ -13,7 +13,7 @@ controls:
   quit: [ q, e, Escape ]
   reset: [ r ]
 
-bot_timeout_ms: 200
+bot_timeout_ms: 100
 
 # Changing this parameter invalidates save file
 # so delete it or save new field before loading
@@ -21,3 +21,4 @@ bot_timeout_ms: 200
 field_size: 4
 
 save_path: .save
+invalid_move_penalty: 10

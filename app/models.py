@@ -67,11 +67,14 @@ class CorruptedSaveFileError(Exception):
 
 class Field:
 
-    def __init__(self, config=None, n=None):
+    def __init__(self, config=None, n=None, invalid_move_penalty=None):
         if config:
             self.n = config.field_size
+            self.invalid_move_penalty = config.invalid_move_penalty
         else:
             self.n = n
+            self.invalid_move_penalty = invalid_move_penalty
+        self.config = config
         self.grid = [[0 for j in range(self.n)] for i in range(self.n)]
         self.score = 0
         self.direction = Direction.UNSET
@@ -125,7 +128,7 @@ class Field:
         if self.cell_changes_count:
             self.spawn_new()
         else:
-            self.score -= 10
+            self.score -= self.invalid_move_penalty
 
     def reset(self):
         self.grid = [[0 for j in range(self.n)] for i in range(self.n)]

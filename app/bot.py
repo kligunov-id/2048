@@ -1,7 +1,7 @@
 import random
 import torch
 
-def preprocessing(observed_grid, num_classes = 10):
+def preprocessing(observed_grid, num_classes = 15):
     grid_tensor = torch.tensor(observed_grid)
     grid_tensor[grid_tensor == 0] = 1
     classes = torch.log2(grid_tensor).long()

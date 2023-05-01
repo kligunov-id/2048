@@ -4,8 +4,8 @@ import app.models
 
 class Environment:
 
-    def __init__(self, field_size=4):
-        self.field = app.models.Field(n=4)
+    def __init__(self, field_size=4, invalid_move_penalty=0):
+        self.field = app.models.Field(n=field_size, invalid_move_penalty=invalid_move_penalty)
         self.reset()
 
     def reset(self):
