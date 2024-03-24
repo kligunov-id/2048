@@ -6,7 +6,11 @@ This is a simple Python Tkinter implementation of the famous game.
 
 ### To run
 
-Simply execute `python 2048.py`.
+Simply execute `python 2048.py`. Make sure to install dependencies first from `requirements.txt`:
+
+```
+pip install -r requirements.txt
+```
 
 
 ### Controls
